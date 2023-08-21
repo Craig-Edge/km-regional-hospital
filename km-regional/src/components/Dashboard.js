@@ -105,7 +105,7 @@ function Dashboard({ selectedHospital, setSelectedHospital }) {
                 <p><strong>Time Requested:</strong> {dispatchRequest.time}</p>
                 <p><strong>NHS Number:</strong> {dispatchRequest.nhs_number}</p>
                 <p><strong>Location:</strong> {dispatchRequest.location}</p>
-                <p><strong>Severity:</strong> {dispatchRequest.severity}</p>
+                {/* <p><strong>Severity:</strong> {dispatchRequest.severity}</p> */}
                 <p><strong>Medical Condition:</strong> {dispatchRequest.medical_condition}</p>
                 <p><strong>Dispatch Status:</strong> {dispatchRequest.dispatch_status}</p>               
               </div>
