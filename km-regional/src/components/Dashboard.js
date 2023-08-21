@@ -6,11 +6,12 @@ function Dashboard({ selectedHospital, setSelectedHospital }) {
   const [hospitalOptions, setHospitalOptions] = useState([]);
   const [dispatchRequests, setDispatchRequests] = useState([]);
   const [hospitalFacilities, setHospitalFacilities] = useState({});
+  const [filterStatus, setFilterStatus] = useState('all');
 
   useEffect(() => {
     fetchHospitalOptions();
     fetchDispatchRequests();
-  }, [selectedHospital]);
+  }, [selectedHospital, filterStatus]);
 
   const fetchHospitalOptions = async () => {
     try {
@@ -30,7 +31,13 @@ function Dashboard({ selectedHospital, setSelectedHospital }) {
   const fetchDispatchRequests = async () => {
     if (selectedHospital) {
       try {
-        const response = await axios.get(`http://localhost:8001/api/dispatch-requests/?hospital_name=${selectedHospital}`);
+        let url = `http://localhost:8001/api/dispatch-requests/?hospital_name=${selectedHospital}`;
+
+        if (filterStatus !== 'all') {
+          url += `&dispatch_status=${filterStatus}`;
+        }
+
+        const response = await axios.get(url);
         setDispatchRequests(response.data);
       } catch (error) {
         console.error('Error fetching dispatch requests:', error);
@@ -83,6 +90,20 @@ function Dashboard({ selectedHospital, setSelectedHospital }) {
               {hospital}
             </option>
           ))}
+        </select>
+      </div>
+      <div className="filter-dropdown">
+        <label htmlFor="filter-status">Filter Status:</label>
+        <select
+          id="filter-status"
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+          className="select-input"
+        >
+          <option value="all">All</option>
+          <option value="requested">Requested</option>
+          <option value="accepted">Accepted</option>
+          <option value="ambulance accepted">Ambulance Accepted</option>
         </select>
       </div>
       {selectedHospital && (
