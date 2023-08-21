@@ -68,6 +68,7 @@ function Dashboard({ selectedHospital, setSelectedHospital }) {
           name="hospital-name"
           value={selectedHospital}
           onChange={(e) => setSelectedHospital(e.target.value)}
+          className="select-input"
         >
           <option value="">Select Hospital</option>
           {hospitalOptions.map((hospital, index) => (
