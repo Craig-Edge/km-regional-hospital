@@ -5,6 +5,7 @@ import './Dashboard.css';
 function Dashboard({ selectedHospital, setSelectedHospital }) {
   const [hospitalOptions, setHospitalOptions] = useState([]);
   const [dispatchRequests, setDispatchRequests] = useState([]);
+  const [hospitalFacilities, setHospitalFacilities] = useState({});
 
   useEffect(() => {
     fetchHospitalOptions();
@@ -14,8 +15,13 @@ function Dashboard({ selectedHospital, setSelectedHospital }) {
   const fetchHospitalOptions = async () => {
     try {
       const response = await axios.get('http://localhost:8001/api/hospitals/');
-      const hospitals = response.data.map(hospital => hospital.hospital_name);
-      setHospitalOptions(hospitals);
+      const hospitals = response.data;
+      setHospitalOptions(hospitals.map(hospital => hospital.hospital_name));
+      const facilitiesMap = {};
+      hospitals.forEach(hospital => {
+        facilitiesMap[hospital.hospital_name] = hospital.facilities;
+      });
+      setHospitalFacilities(facilitiesMap);
     } catch (error) {
       console.error('Error fetching hospital options:', error);
     }
@@ -57,6 +63,7 @@ function Dashboard({ selectedHospital, setSelectedHospital }) {
   return (
     <div className="dashboard">
       <h2 className="hospital-name">{selectedHospital}</h2>
+      <h3 className="hospital-name"> Facilities: {hospitalFacilities[selectedHospital]}</h3>
       <div className="dashboard-buttons">
         <button className="refresh-button" onClick={handleRefresh}>
           Refresh
@@ -80,26 +87,21 @@ function Dashboard({ selectedHospital, setSelectedHospital }) {
       </div>
       {selectedHospital && (
         <div className="dispatch-requests">
-          {dispatchRequests.map((dispatchRequest) => (
+          {dispatchRequests.map(dispatchRequest => (
             <div key={dispatchRequest.id} className="dispatch-request">
               <div className="dispatch-info">
                 <p><strong>Request ID:</strong> {dispatchRequest.id}</p>
+                <p><strong>Date Requested:</strong> {dispatchRequest.date}</p>
+                <p><strong>Time Requested:</strong> {dispatchRequest.time}</p>
                 <p><strong>NHS Number:</strong> {dispatchRequest.nhs_number}</p>
                 <p><strong>Location:</strong> {dispatchRequest.location}</p>
                 <p><strong>Severity:</strong> {dispatchRequest.severity}</p>
                 <p><strong>Medical Condition:</strong> {dispatchRequest.medical_condition}</p>
-                <p><strong>Dispatch Status:</strong> {dispatchRequest.dispatch_status}</p>
+                <p><strong>Dispatch Status:</strong> {dispatchRequest.dispatch_status}</p>               
               </div>
               <div className="dispatch-actions">
-                { (
-                  <>
-                    <button onClick={() => handleAccept(dispatchRequest.id)}>Accept</button>
-                    <button className="deny" onClick={() => handleDeny(dispatchRequest.id)}>Deny</button>
-                  </>
-                )}
-                {dispatchRequest.dispatch_status && (
-                  <p><strong>Status:</strong> {dispatchRequest.dispatch_status}</p>
-                )}
+                <button onClick={() => handleAccept(dispatchRequest.id)}>Accept</button>
+                <button className="deny" onClick={() => handleDeny(dispatchRequest.id)}>Deny</button>
               </div>
             </div>
           ))}
