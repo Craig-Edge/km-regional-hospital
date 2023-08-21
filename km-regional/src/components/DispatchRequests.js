@@ -26,8 +26,6 @@ function DispatchRequests({ hospitalName }) {
             NHS Number: {dispatchRequest.nhs_number}<br />
             Location: {dispatchRequest.location}<br />
             Chosen Hospital: {dispatchRequest.chosen_hospital}<br />
-            {/* Distance: {dispatchRequest.distance} km<br />
-            Facilities: {dispatchRequest.facilities}<br /> */}
           </li>
         ))}
       </ul>
