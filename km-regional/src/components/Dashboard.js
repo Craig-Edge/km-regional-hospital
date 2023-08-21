@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './Dashboard.css';
 
 function Dashboard({ selectedHospital }) {
   const [dispatchRequests, setDispatchRequests] = useState([]);
@@ -20,7 +21,6 @@ function Dashboard({ selectedHospital }) {
   const handleAccept = async (id) => {
     try {
       await axios.patch(`http://localhost:8001/api/dispatch-requests/${id}/`, { dispatch_status: 'accepted' });
-      // Update the UI to reflect the change
       const updatedRequests = dispatchRequests.map(request => {
         if (request.id === id) {
           return { ...request, dispatch_status: 'accepted' };
@@ -36,7 +36,6 @@ function Dashboard({ selectedHospital }) {
   const handleDeny = async (id) => {
     try {
       await axios.patch(`http://localhost:8001/api/dispatch-requests/${id}/`, { dispatch_status: 'denied' });
-      // Update the UI to reflect the change
       const updatedRequests = dispatchRequests.map(request => {
         if (request.id === id) {
           return { ...request, dispatch_status: 'denied' };
@@ -50,24 +49,33 @@ function Dashboard({ selectedHospital }) {
   };
 
   return (
-    <div>
+    <div className="dashboard">
       <h2>Dispatch Requests</h2>
-      <div>
-      <button onClick={fetchDispatchRequests}>Refresh</button>
+      <div className="dashboard-buttons">
+        <button onClick={fetchDispatchRequests}>Refresh</button>
       </div>
-      <ul>
+      <div className="dispatch-requests">
         {dispatchRequests.map(request => (
-          <li key={request.id}>
-            {request.id} - {request.nhs_number} - {request.location} - {request.severity} - {request.medical_condition} - Dispatch Status: {request.dispatch_status}
-            {!request.accepted && (
-              <div>
-                <button onClick={() => handleAccept(request.id)}>Accept</button>
-                <button onClick={() => handleDeny(request.id)}>Deny</button>
-              </div>
-            )}
-          </li>
+          <div key={request.id} className="dispatch-request">
+            <div className="dispatch-info">
+              <span><strong>Request ID:</strong> {request.id}</span> 
+              <span><strong>NHS Number:</strong> {request.nhs_number}</span> 
+              <span><strong>Location:</strong> {request.location}</span>
+              <span><strong>Severity:</strong> {request.severity}</span> 
+              <span><strong>Medical Condition:</strong> {request.medical_condition}</span> 
+              <span><strong>Dispatch Status:</strong> {request.dispatch_status}</span>
+            </div>
+            <div className="dispatch-actions">
+              {!request.accepted && (
+                <>
+                  <button onClick={() => handleAccept(request.id)}>Accept</button>
+                  <button className="deny" onClick={() => handleDeny(request.id)}>Deny</button>
+                </>
+              )}
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './HospitalLogin.css'; // Import the CSS file for styling
 
 function HospitalLogin({ onLogin }) {
   const [hospitalOptions, setHospitalOptions] = useState([]);
@@ -25,14 +26,21 @@ function HospitalLogin({ onLogin }) {
   };
 
   return (
-    <div>
+    <div className="hospital-login">
       <h1>Regional Hospital Login</h1>
       <form onSubmit={handleLogin}>
         <label htmlFor="hospital-name">Select Hospital:</label>
-        <select id="hospital-name" name="hospital-name" value={selectedHospital} onChange={(e) => setSelectedHospital(e.target.value)}>
+        <select
+          id="hospital-name"
+          name="hospital-name"
+          value={selectedHospital}
+          onChange={(e) => setSelectedHospital(e.target.value)}
+        >
           <option value="">Select Hospital</option>
           {hospitalOptions.map((hospital, index) => (
-            <option key={index} value={hospital}>{hospital}</option>
+            <option key={index} value={hospital}>
+              {hospital}
+            </option>
           ))}
         </select>
         <br />
