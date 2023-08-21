@@ -70,7 +70,9 @@ function Dashboard({ selectedHospital, setSelectedHospital }) {
   return (
     <div className="dashboard">
       <h2 className="hospital-name">{selectedHospital}</h2>
+      {selectedHospital &&
       <h3 className="hospital-name"> Facilities: {hospitalFacilities[selectedHospital]}</h3>
+      }
       <div className="dashboard-buttons">
         <button className="refresh-button" onClick={handleRefresh}>
           Refresh
@@ -92,20 +94,7 @@ function Dashboard({ selectedHospital, setSelectedHospital }) {
           ))}
         </select>
       </div>
-      <div className="filter-dropdown">
-        <label htmlFor="filter-status">Filter Status:</label>
-        <select
-          id="filter-status"
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="select-input"
-        >
-          <option value="all">All</option>
-          <option value="requested">Requested</option>
-          <option value="accepted">Accepted</option>
-          <option value="ambulance accepted">Ambulance Accepted</option>
-        </select>
-      </div>
+ 
       {selectedHospital && (
         <div className="dispatch-requests">
           {dispatchRequests.map(dispatchRequest => (
